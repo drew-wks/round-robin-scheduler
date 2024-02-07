@@ -59,17 +59,34 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
     return schedule
 
 
-def schedule_to_dataframe(schedule):
-    # Flatten the schedule to a list of dicts for easy conversion to DataFrame
+def schedule_to_dataframe(schedule, people):
+    # Initialize the DataFrame with additional columns for each person
+    columns = ["Week of", "Meeting"] + people
     data = []
+    
     for interval, meetings in schedule.items():
         for week, meeting in meetings:
-            data.append({"Week of": week, "Meeting": meeting})
-    return pd.DataFrame(data)
-
-# Function to convert schedule to CSV and allow download
-def convert_df_to_csv(df):
-    return df.to_csv().encode('utf-8')
+            row = {"Week of": week, "Meeting": meeting}
+            # Initialize person columns with empty strings or zeros
+            for person in people:
+                row[person] = ""  # or 0 if you prefer numeric indicators
+            # Check if the meeting involves specific people and mark accordingly
+            if "meet" in meeting:
+                participants = meeting.split(" & ")
+                for participant in participants:
+                    if participant in row:
+                        row[participant] = "X"  # or 1 for numeric indicators
+            data.append(row)
+    
+    df = pd.DataFrame(data, columns=columns)
+    
+    # Optionally, add a totals row at the bottom
+    totals = {"Week of": "Total", "Meeting": ""}
+    for person in people:
+        totals[person] = df[person].apply(lambda x: 1 if x == "X" else 0).sum()
+    df = df.append(totals, ignore_index=True)
+    
+    return df
 
 
 
@@ -103,15 +120,13 @@ if submitted:
         st.error("Please enter up to 9 people.")
     else:
         try:
-            # Call generate_meetings to create the schedule
             schedule = generate_meetings(people, group_meeting_interval, meetings_per_person, allow_meetings_during_group, repetition, num_intervals, group_meeting_date)
             
-            # Convert the generated schedule to a DataFrame
-            df_schedule = schedule_to_dataframe(schedule)
+            # Convert the generated schedule to a DataFrame with additional columns for each person
+            df_schedule = schedule_to_dataframe(schedule, people)
             st.subheader("Meeting Schedule:")
             st.dataframe(df_schedule, hide_index=True, height=500)
             
-            # Download button
             csv = convert_df_to_csv(df_schedule)
             st.download_button(
                 label="Download Meeting Schedule as CSV",
