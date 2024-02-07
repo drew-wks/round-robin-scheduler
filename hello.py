@@ -14,32 +14,37 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
     all_pairings = list(combinations(people, 2))
     schedule = {}
     
-    total_meetings_needed = meetings_per_person * len(people) // 2 * num_intervals
-    meetings_per_week = max(1, total_meetings_needed // (group_meeting_interval * num_intervals))
-    
     for interval in range(1, num_intervals + 1):
         interval_schedule = [("Week 0", "Group Meeting")]
         used_pairs = set()
-        weeks_to_schedule = range(1, group_meeting_interval + 1) if allow_meetings_during_group else range(2, group_meeting_interval)
+        available_weeks = range(1, group_meeting_interval + 1) if allow_meetings_during_group else range(2, group_meeting_interval)
         
-        for week in weeks_to_schedule:
-            week_meetings = 0
-            while week_meetings < meetings_per_week:
+        # Calculate the total number of meetings to schedule in the interval
+        total_meetings_this_interval = meetings_per_person * len(people) // 2
+        
+        meetings_scheduled = 0
+        for week in available_weeks:
+            while meetings_scheduled < total_meetings_this_interval:
                 if repetition:
                     pair = random.choice(all_pairings)
                 else:
                     possible_pairs = [pair for pair in all_pairings if pair not in used_pairs]
-                    if not possible_pairs:
-                        break  # No more unique pairings available, move to the next week
+                    if not possible_pairs:  # If no more unique pairings are available, break
+                        break
                     pair = random.choice(possible_pairs)
                     used_pairs.add(pair)
                 
                 interval_schedule.append((f"Week {week}", f"{pair[0]} & {pair[1]} 1:1 Meeting"))
-                week_meetings += 1
+                meetings_scheduled += 1
+                
+                # Check if we've scheduled enough meetings for this interval
+                if meetings_scheduled >= total_meetings_this_interval:
+                    break
         
         schedule[f"Interval {interval}"] = interval_schedule
     
     return schedule
+
 
 def schedule_to_dataframe(schedule):
     # Flatten the schedule to a list of dicts for easy conversion to DataFrame
