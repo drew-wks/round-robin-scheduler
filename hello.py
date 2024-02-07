@@ -35,7 +35,8 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
     return schedule
 
 # Streamlit app
-st.title("Po7 Round Robin Meeting Schedule")
+st.title("Po7 1:1 Meeting Schedule")
+st.markdown("Creates a custom schedule in round robin format, enabling each person to meet with each other in the most efficient manner")
 
 # Input fields
 with st.form("input_form"):
