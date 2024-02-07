@@ -109,7 +109,7 @@ if submitted:
             # Convert the generated schedule to a DataFrame
             df_schedule = schedule_to_dataframe(schedule)
             st.subheader("Meeting Schedule:")
-            st.dataframe(df_schedule, hide_index=True, height=400)
+            st.dataframe(df_schedule, hide_index=True, height=500)
             
             # Download button
             csv = convert_df_to_csv(df_schedule)
