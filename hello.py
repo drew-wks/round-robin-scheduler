@@ -39,7 +39,7 @@ st.title("Po7 Round Robin Meeting Schedule")
 
 # Input fields
 with st.form("input_form"):
-    people_input = st.text_input("Enter names of people separated by commas (up to 7 people)", "DW, TL, GN, AC, MH, SW")
+    people_input = st.text_input("List members' names separated by commas (up to 9 people)", "DW, TL, GN, AC, MH, SW")
     group_meeting_interval = st.slider("Group meeting interval (example: group meets every 8 weeks)", min_value=1, max_value=12, value=8, step=1)
     meetings_per_person = st.number_input("1:1 meetings per person per interval", value=3, min_value=1, max_value=group_meeting_interval-1)
     num_intervals = st.number_input("Number of intervals to schedule", value=2, min_value=1)
@@ -50,8 +50,8 @@ with st.form("input_form"):
 
 if submitted:
     people = [p.strip() for p in people_input.split(",") if p.strip()]
-    if len(people) > 7:
-        st.error("Please enter up to 7 people.")
+    if len(people) > 9:
+        st.error("Maximum number of 9 people.")
     else:
         try:
             schedule = generate_meetings(people, group_meeting_interval, meetings_per_person, allow_meetings_during_group, repetition, num_intervals)
