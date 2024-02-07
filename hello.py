@@ -72,9 +72,9 @@ with col2:
     st.image("https://images.squarespace-cdn.com/content/v1/611645b4405ecc34f75902d4/1630940958363-48IAK69A1MB56BOGE5I7/P07+Secondary+Logo.png?format=2500w", width = 100)
 with col3:
     st.write('   ')
-st.markdown("### Po7 1:1 Round Robin Meeting Scheduler")
+st.markdown("### Po7 Matchmaking Meeting Tool")
 
-st.markdown("Create a custom 1:1 meeting schedule for Po7 groups. The goal is ensure everyone meets with everyone else while distributing meetings evenly in a way that takes into account people's preferences for meeting frequency. App uses a round robin format, enabling every person to meet individually with everyone else (at least once) in the most efficient manner.")
+st.markdown("Create a custom schedule of 1:1 meetings for Po7 groups. The goal is ensure everyone meets with everyone else while distributing meetings evenly in a way that takes into account people's preferences for meeting frequency. App uses a round robin format, enabling every person to meet individually with everyone else (at least once) in the most efficient manner.")
 
 # Input fields
 with st.form("input_form"):
