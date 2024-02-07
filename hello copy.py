@@ -2,16 +2,10 @@ import streamlit as st
 import pandas as pd
 from itertools import combinations
 import random
-from datetime import datetime, timedelta
-
-
-
-def start_of_week(date):
-    return date - timedelta(days=date.weekday() + 1)  # Adjusted for week starting on Sunday
 
 
 # Function to generate 1:1 meetings
-def generate_meetings(people, group_meeting_interval, meetings_per_person, allow_meetings_during_group, repetition, num_intervals, start_date):
+def generate_meetings(people, group_meeting_interval, meetings_per_person, allow_meetings_during_group, repetition, num_intervals):
     if meetings_per_person > group_meeting_interval:
         raise ValueError("Meetings per person must be less than or equal to the group session interval.")
     if meetings_per_person < 1:
@@ -19,13 +13,11 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
     
     all_pairings = list(combinations(people, 2))
     schedule = {}
-    current_start_date = start_of_week(start_date)  # Find the start of the week for the given start date
     
     for interval in range(1, num_intervals + 1):
         interval_schedule = []
         if not allow_meetings_during_group:
-            week_of = current_start_date.strftime("Week of %b %d, %Y")
-            interval_schedule.append((week_of, "GROUP SESSION"))
+            interval_schedule.append(("Week 1", "GROUP SESSION"))
         
         used_pairs = set()
         available_weeks = list(range(2, group_meeting_interval + 1)) if not allow_meetings_during_group else list(range(1, group_meeting_interval + 1))
@@ -36,25 +28,24 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
         
         for week in available_weeks:
             week_meetings_scheduled = 0
-            week_of = (current_start_date + timedelta(weeks=week-1)).strftime("Week of %b %d, %Y")
             while week_meetings_scheduled < meetings_per_week and len(used_pairs) < len(all_pairings):
                 if repetition:
                     pair = random.choice(all_pairings)
                 else:
                     possible_pairs = [pair for pair in all_pairings if pair not in used_pairs]
-                    if not possible_pairs:
+                    if not possible_pairs:  # If no more unique pairings are available, break
                         break
                     pair = random.choice(possible_pairs)
                     used_pairs.add(pair)
                 
-                interval_schedule.append((week_of, f"{pair[0]} & {pair[1]} meet"))
+                interval_schedule.append((f"Week {week}", f"{pair[0]} & {pair[1]} meet"))
                 week_meetings_scheduled += 1
                 
+                # Check if we've scheduled enough meetings for this interval
                 if len(used_pairs) >= total_meetings:
                     break
         
         schedule[f"Interval {interval}"] = interval_schedule
-        current_start_date += timedelta(weeks=group_meeting_interval)  # Move to the next interval start date
     
     return schedule
 
@@ -88,7 +79,6 @@ st.markdown("Create a custom schedule of 1:1 meetings for Po7 groups. The goal i
 # Input fields
 with st.form("input_form"):
     people_input = st.text_input("List members' names or initials separated by commas (up to 9 people)", "DW, TL, GN, AC, MH, SW")
-    group_meeting_date = st.date_input("Select the start date for the first group meeting", datetime.today())
     group_meeting_interval = st.slider("Frequency of Group sessions (example: group meets every 8 weeks)", min_value=1, max_value=12, value=8, step=1)
     meetings_per_person = st.slider("Maximum number of 1:1 meetings per person between group sessions. (Note: In order to meet with everyone at least once, set this to the number of other members)", value=7, min_value=1, max_value=group_meeting_interval-1)
     num_intervals = 2
@@ -104,7 +94,7 @@ if submitted:
     else:
         try:
             # Call generate_meetings to create the schedule
-            schedule = generate_meetings(people, group_meeting_interval, meetings_per_person, allow_meetings_during_group, repetition, num_intervals, group_meeting_date)
+            schedule = generate_meetings(people, group_meeting_interval, meetings_per_person, allow_meetings_during_group, repetition, num_intervals)
             
             # Convert the generated schedule to a DataFrame
             df_schedule = schedule_to_dataframe(schedule)
