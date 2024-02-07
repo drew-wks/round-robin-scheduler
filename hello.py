@@ -25,7 +25,7 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
         interval_schedule = []
         if not allow_meetings_during_group:
             week_of = current_start_date.strftime("Week of %b %d, %Y")
-            interval_schedule.append((week_of, "GROUP SESSION"))
+            interval_schedule.append((week_of, "--GROUP SESSION--"))
         
         used_pairs = set()
         available_weeks = list(range(2, group_meeting_interval + 1)) if not allow_meetings_during_group else list(range(1, group_meeting_interval + 1))
