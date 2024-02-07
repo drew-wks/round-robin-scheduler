@@ -1,6 +1,8 @@
 import streamlit as st
+import pandas as pd
 from itertools import combinations
 import random
+
 
 # Function to generate 1:1 meetings
 def generate_meetings(people, group_meeting_interval, meetings_per_person, allow_meetings_during_group, repetition, num_intervals):
@@ -33,6 +35,14 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
         schedule[f"Interval {interval}"] = interval_schedule
     
     return schedule
+
+def schedule_to_dataframe(schedule):
+    # Flatten the schedule to a list of dicts for easy conversion to DataFrame
+    data = []
+    for interval, meetings in schedule.items():
+        for week, meeting in meetings:
+            data.append({"Interval": interval, "Week": week, "Meeting": meeting})
+    return pd.DataFrame(data)
 
 # Function to convert schedule to CSV and allow download
 def convert_df_to_csv(df):
