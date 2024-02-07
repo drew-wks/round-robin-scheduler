@@ -82,8 +82,8 @@ with st.form("input_form"):
     group_meeting_interval = st.slider("Frequency of Group sessions (example: group meets every 8 weeks)", min_value=1, max_value=12, value=8, step=1)
     meetings_per_person = st.slider("Maximum number of 1:1 meetings per person between group sessions", value=3, min_value=1, max_value=group_meeting_interval-1)
     num_intervals = 2
-    allow_meetings_during_group = st.toggle("Allow 1:1 meetings on the week of a group session", value=False)
     repetition = st.toggle("Allow multiple 1:1 meetings between the same individuals between group sessions", value=False)
+    allow_meetings_during_group = st.toggle("Allow 1:1 meetings on the week of a group session", value=False)
     submitted = st.form_submit_button("Generate a 1:1 meeting schedule", type="primary")
     
 
