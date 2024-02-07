@@ -15,7 +15,7 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
     schedule = {}
     
     for interval in range(1, num_intervals + 1):
-        interval_schedule = [("Week 0", "Group Meeting")]
+        interval_schedule = [("----", "GROUP MEETING")]
         used_pairs = set()
         available_weeks = range(1, group_meeting_interval + 1) if allow_meetings_during_group else range(2, group_meeting_interval)
         
@@ -95,7 +95,7 @@ if submitted:
             # Convert the generated schedule to a DataFrame
             df_schedule = schedule_to_dataframe(schedule)
             st.subheader("Schedule:")
-            st.dataframe(df_schedule)
+            st.dataframe(df_schedule, hide_index=True)
             
             # Download button
             csv = convert_df_to_csv(df_schedule)
