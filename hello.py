@@ -43,9 +43,10 @@ with st.form("input_form"):
     group_meeting_interval = st.number_input("Group meeting interval (example: group meets every 8 weeks)", value=8, min_value=1)
     meetings_per_person = st.number_input("1:1 meetings per person per interval", value=3, min_value=1, max_value=group_meeting_interval-1)
     num_intervals = st.number_input("Number of intervals to schedule", value=2, min_value=1)
-    allow_meetings_during_group = st.checkbox("Allow 1:1 meetings during weeks the group meets", value=False)
-    repetition = st.checkbox("Allow repeated pairings during an interval", value=False)
+    allow_meetings_during_group = st.toggle("Allow 1:1 meetings during weeks the group meets", value=False)
+    repetition = st.toggle("Allow repeated pairings during an interval", value=False)
     submitted = st.form_submit_button("Generate a 1:1 Meeeting schedule")
+    
 
 if submitted:
     people = [p.strip() for p in people_input.split(",") if p.strip()]
