@@ -93,6 +93,11 @@ def schedule_to_dataframe(schedule, people):
 
 
 
+# Function to convert schedule to CSV and allow download
+def convert_df_to_csv(df):
+    return df.to_csv().encode('utf-8')
+
+
 
 # Streamlit app
 col1, col2, col3 = st.columns([3,3,2])
