@@ -36,7 +36,7 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
         
         for week in available_weeks:
             week_meetings_scheduled = 0
-            week_of = (current_start_date + timedelta(weeks=week-1)).strftime("Week of %b %d, %Y")
+            week_of = (current_start_date + timedelta(weeks=week-1)).strftime("%b %d, %Y")
             while week_meetings_scheduled < meetings_per_week and len(used_pairs) < len(all_pairings):
                 if repetition:
                     pair = random.choice(all_pairings)
@@ -64,7 +64,7 @@ def schedule_to_dataframe(schedule):
     data = []
     for interval, meetings in schedule.items():
         for week, meeting in meetings:
-            data.append({"Interval": interval, "Week": week, "Meeting": meeting})
+            data.append({"Interval": interval, "Week of": week, "Meeting": meeting})
     return pd.DataFrame(data)
 
 # Function to convert schedule to CSV and allow download
