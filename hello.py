@@ -38,7 +38,7 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
                     pair = random.choice(possible_pairs)
                     used_pairs.add(pair)
                 
-                interval_schedule.append((f"Week {week}", f"{pair[0]} & {pair[1]} 1:1 Meeting"))
+                interval_schedule.append((f"Week {week}", f"{pair[0]} & {pair[1]} Meet"))
                 week_meetings_scheduled += 1
                 
                 # Check if we've scheduled enough meetings for this interval
