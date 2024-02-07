@@ -59,7 +59,7 @@ with col2:
 with col3:
     st.write(' ')
 
-st.title("Po7 1:1 Round Robin Meeting Scheduler")
+st.markdown("### Po7 1:1 Round Robin Meeting Scheduler")
 st.markdown("Creates a custom 1:1 meeting schedule in between group meetings. App uses a round robin format, enabling each person to meet with each other in the most efficient manner")
 
 # Input fields
