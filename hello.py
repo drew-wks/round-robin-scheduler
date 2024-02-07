@@ -77,9 +77,7 @@ st.markdown("""
 <img src="https://images.squarespace-cdn.com/content/v1/611645b4405ecc34f75902d4/1630940958363-48IAK69A1MB56BOGE5I7/P07+Secondary+Logo.png?format=2500w, width=150" class="centeredImage">
 """, unsafe_allow_html=True)
 
-    st.markdown("### Po7 1:1 Round Robin Meeting Scheduler")
-with col3:
-    st.write('   ')
+st.markdown("### Po7 1:1 Round Robin Meeting Scheduler")
 
 
 st.markdown("Creates a custom 1:1 meeting schedule in between group sessions. The goal is ensure everyone meets with everyone else while distributing meetings evenly in a way that takes into account people's preferences for meeting frequency. App uses a round robin format, enabling each person to meet with each other in the most efficient manner.")
