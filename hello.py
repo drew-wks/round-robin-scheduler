@@ -66,21 +66,27 @@ with st.form("input_form"):
     
 
 if submitted:
-    # ... your existing code to generate and display the schedule ...
-    try:
-        # Assuming 'schedule' is the generated schedule
-        df_schedule = schedule_to_dataframe(schedule)
-        st.subheader("Schedule:")
-        st.dataframe(df_schedule)
-        
-        # Download button
-        csv = convert_df_to_csv(df_schedule)
-        st.download_button(
-            label="Download Meeting Schedule as CSV",
-            data=csv,
-            file_name='meeting_schedule.csv',
-            mime='text/csv',
-        )
-    except ValueError as e:
-        st.error(e)
+    people = [p.strip() for p in people_input.split(",") if p.strip()]
+    if len(people) > 9:
+        st.error("Please enter up to 9 people.")
+    else:
+        try:
+            # Call generate_meetings to create the schedule
+            schedule = generate_meetings(people, group_meeting_interval, meetings_per_person, allow_meetings_during_group, repetition, num_intervals)
+            
+            # Convert the generated schedule to a DataFrame
+            df_schedule = schedule_to_dataframe(schedule)
+            st.subheader("Schedule:")
+            st.dataframe(df_schedule)
+            
+            # Download button
+            csv = convert_df_to_csv(df_schedule)
+            st.download_button(
+                label="Download Meeting Schedule as CSV",
+                data=csv,
+                file_name='meeting_schedule.csv',
+                mime='text/csv',
+            )
+        except ValueError as e:
+            st.error(e)
 
