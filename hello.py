@@ -17,7 +17,7 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
     for interval in range(1, num_intervals + 1):
         interval_schedule = []
         if not allow_meetings_during_group:
-            interval_schedule.append(("Week 1", "Group Session"))
+            interval_schedule.append(("Week 1", "GROUP SESSION"))
         
         used_pairs = set()
         available_weeks = list(range(2, group_meeting_interval + 1)) if not allow_meetings_during_group else list(range(1, group_meeting_interval + 1))
@@ -80,7 +80,7 @@ st.markdown("Creates a custom 1:1 meeting schedule in between group sessions. Th
 with st.form("input_form"):
     people_input = st.text_input("List members' names or initials separated by commas (up to 9 people)", "DW, TL, GN, AC, MH, SW")
     group_meeting_interval = st.slider("Frequency of Group sessions (example: group meets every 8 weeks)", min_value=1, max_value=12, value=8, step=1)
-    meetings_per_person = st.slider("Maximum number of 1:1 meetings per person between group sessions", value=3, min_value=1, max_value=group_meeting_interval-1)
+    meetings_per_person = st.slider("Maximum number of 1:1 meetings per person between group sessions. This must be greater than the number of other members to meet with everyone once", value=7, min_value=1, max_value=group_meeting_interval-1)
     num_intervals = 2
     repetition = st.toggle("Allow multiple 1:1 meetings between the same individuals between group sessions", value=False)
     allow_meetings_during_group = st.toggle("Allow 1:1 meetings on the week of a group session", value=False)
