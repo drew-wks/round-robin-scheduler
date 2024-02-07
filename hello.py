@@ -138,7 +138,7 @@ if submitted:
             
             csv = convert_df_to_csv(df_schedule)
             st.download_button(
-                label="Download Meeting Schedule as CSV",
+                label="Download Meeting Schedule",
                 data=csv,
                 file_name='Po7_meeting_schedule.csv',
                 mime='text/csv',
