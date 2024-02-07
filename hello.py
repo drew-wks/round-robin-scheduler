@@ -108,10 +108,8 @@ if submitted:
             
             # Convert the generated schedule to a DataFrame
             df_schedule = schedule_to_dataframe(schedule)
-            columns_to_display = [col for col in df_schedule.columns if col != "Interval"]
-            display_df = df_schedule[columns_to_display]
             st.subheader("Meeting Schedule:")
-            st.dataframe(display_df, hide_index=True)
+            st.dataframe(df_schedule, hide_index=True)
             
             # Download button
             csv = convert_df_to_csv(df_schedule)
