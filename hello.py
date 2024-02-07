@@ -58,7 +58,7 @@ st.markdown("Creates a custom 1:1 meeting schedule in between group meetings. Ap
 with st.form("input_form"):
     people_input = st.text_input("List members' names separated by commas (up to 9 people)", "DW, TL, GN, AC, MH, SW")
     group_meeting_interval = st.slider("Group meeting interval (example: group meets every 8 weeks)", min_value=1, max_value=12, value=8, step=1)
-    meetings_per_person = st.number_input("1:1 meetings per person per interval", value=3, min_value=1, max_value=group_meeting_interval-1)
+    meetings_per_person = st.slider("Number of 1:1 meetings to schedule between each group meeting", value=3, min_value=1, max_value=group_meeting_interval-1)
     num_intervals = st.number_input("Number of intervals to schedule", value=2, min_value=1)
     allow_meetings_during_group = st.toggle("Allow 1:1 meetings during weeks the group meets", value=False)
     repetition = st.toggle("Allow repeated pairings during an interval", value=False)
