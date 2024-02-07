@@ -15,16 +15,20 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
     schedule = {}
     
     for interval in range(1, num_intervals + 1):
-        interval_schedule = [("----", "GROUP MEETING")]
+        interval_schedule = []
+        if not allow_meetings_during_group:
+            interval_schedule.append(("Week 1", "Group Meeting"))
+        
         used_pairs = set()
-        available_weeks = range(1, group_meeting_interval + 1) if allow_meetings_during_group else range(2, group_meeting_interval)
+        available_weeks = list(range(2, group_meeting_interval + 1)) if not allow_meetings_during_group else list(range(1, group_meeting_interval + 1))
         
-        # Calculate the total number of meetings to schedule in the interval
-        total_meetings_this_interval = meetings_per_person * len(people) // 2
+        # Determine the number of meetings to schedule each week to spread them evenly
+        total_meetings = meetings_per_person * len(people) // 2
+        meetings_per_week = max(1, total_meetings // len(available_weeks))
         
-        meetings_scheduled = 0
         for week in available_weeks:
-            while meetings_scheduled < total_meetings_this_interval:
+            week_meetings_scheduled = 0
+            while week_meetings_scheduled < meetings_per_week and len(used_pairs) < len(all_pairings):
                 if repetition:
                     pair = random.choice(all_pairings)
                 else:
@@ -34,11 +38,11 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
                     pair = random.choice(possible_pairs)
                     used_pairs.add(pair)
                 
-                interval_schedule.append((f"Week {week}", f"{pair[0]} & {pair[1]}"))
-                meetings_scheduled += 1
+                interval_schedule.append((f"Week {week}", f"{pair[0]} & {pair[1]} 1:1 Meeting"))
+                week_meetings_scheduled += 1
                 
                 # Check if we've scheduled enough meetings for this interval
-                if meetings_scheduled >= total_meetings_this_interval:
+                if len(used_pairs) >= total_meetings:
                     break
         
         schedule[f"Interval {interval}"] = interval_schedule
@@ -70,7 +74,7 @@ with col3:
     st.write(' ')
 
 st.markdown("### Po7 1:1 Round Robin Meeting Scheduler")
-st.markdown("Creates a custom 1:1 meeting schedule in between group meetings. App uses a round robin format, enabling each person to meet with each other in the most efficient manner")
+st.markdown("Creates a custom 1:1 meeting schedule in between group meetings. App uses a round robin format, enabling each person to meet with each other in the most efficient manner.  The goal is to distribute the meetings across all available weeks, taking into account people's preferences for meeting frequency.")
 
 # Input fields
 with st.form("input_form"):
