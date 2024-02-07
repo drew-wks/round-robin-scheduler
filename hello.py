@@ -118,7 +118,7 @@ if submitted:
             st.download_button(
                 label="Download Meeting Schedule as CSV",
                 data=csv,
-                file_name='meeting_schedule.csv',
+                file_name='Po7_meeting_schedule.csv',
                 mime='text/csv',
             )
         except ValueError as e:
