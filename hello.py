@@ -34,19 +34,18 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
     
     return schedule
 
-
 # Streamlit app
 st.title("Po7 Round Robin Meeting Schedule")
 
 # Input fields
 with st.form("input_form"):
     people_input = st.text_input("Enter names of people separated by commas (up to 7 people)", "DW, TL, GN, AC, MH, SW")
-    group_meeting_interval = st.number_input("Group Meeting Interval (how often does the group meeting in weeks)", value=8, min_value=1)
-    available_weeks = st.number_input("Available Weeks for Meetings", value=6, min_value=1, max_value=group_meeting_interval)
-    meetings_per_person = st.number_input("Meetings per interval", value=3, min_value=1, max_value=group_meeting_interval)
-    no_repetition = st.checkbox("Allow repeated pairings", value=False)
-    num_intervals = st.number_input("Number of Intervals to Schedule", value=2, min_value=1)
-    submitted = st.form_submit_button("Generate Schedule")
+    group_meeting_interval = st.number_input("Group meeting interval (example: group meets every 8 weeks)", value=8, min_value=1)
+    meetings_per_person = st.number_input("1:1 meetings per person per interval", value=3, min_value=1, max_value=group_meeting_interval-1)
+    allow_meetings_during_group = st.checkbox("Allow 1:1 meetings during weeks the group meets", value=False)
+    repetition = st.checkbox("Allow repeated pairings during an interval", value=False)
+    num_intervals = st.number_input("Number of intervals to schedule", value=2, min_value=1)
+    submitted = st.form_submit_button("Generate a 1:1 Meeeting schedule")
 
 if submitted:
     people = [p.strip() for p in people_input.split(",") if p.strip()]
@@ -54,11 +53,12 @@ if submitted:
         st.error("Please enter up to 7 people.")
     else:
         try:
-            schedule = generate_meetings(people, group_meeting_interval, available_weeks, meetings_per_person, no_repetition, num_intervals)
-            st.subheader("ROund Robin Schedule:")
+            schedule = generate_meetings(people, group_meeting_interval, meetings_per_person, allow_meetings_during_group, repetition, num_intervals)
+            st.subheader("Schedule:")
             for interval, meetings in schedule.items():
                 st.markdown(f"**{interval}:**")
                 for week, meeting in meetings:
                     st.write(f"{week}: {meeting}")
         except ValueError as e:
             st.error(e)
+
