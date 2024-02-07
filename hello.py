@@ -52,7 +52,7 @@ def convert_df_to_csv(df):
 
 # Streamlit app
 st.title("Po7 1:1 Meeting Schedule")
-st.markdown("Creates a custom schedule in round robin format, enabling each person to meet with each other in the most efficient manner")
+st.markdown("Creates a custom 1:1 meeting schedule in between group meetings. App uses a round robin format, enabling each person to meet with each other in the most efficient manner")
 
 # Input fields
 with st.form("input_form"):
