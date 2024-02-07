@@ -34,6 +34,12 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
     
     return schedule
 
+# Function to convert schedule to CSV and allow download
+def convert_df_to_csv(df):
+    return df.to_csv().encode('utf-8')
+
+
+
 # Streamlit app
 st.title("Po7 1:1 Meeting Schedule")
 st.markdown("Creates a custom schedule in round robin format, enabling each person to meet with each other in the most efficient manner")
@@ -50,17 +56,21 @@ with st.form("input_form"):
     
 
 if submitted:
-    people = [p.strip() for p in people_input.split(",") if p.strip()]
-    if len(people) > 9:
-        st.error("Maximum number of 9 people.")
-    else:
-        try:
-            schedule = generate_meetings(people, group_meeting_interval, meetings_per_person, allow_meetings_during_group, repetition, num_intervals)
-            st.subheader("Schedule:")
-            for interval, meetings in schedule.items():
-                st.markdown(f"**{interval}:**")
-                for week, meeting in meetings:
-                    st.write(f"{week}: {meeting}")
-        except ValueError as e:
-            st.error(e)
+    # ... your existing code to generate and display the schedule ...
+    try:
+        # Assuming 'schedule' is the generated schedule
+        df_schedule = schedule_to_dataframe(schedule)
+        st.subheader("Schedule:")
+        st.dataframe(df_schedule)
+        
+        # Download button
+        csv = convert_df_to_csv(df_schedule)
+        st.download_button(
+            label="Download Meeting Schedule as CSV",
+            data=csv,
+            file_name='meeting_schedule.csv',
+            mime='text/csv',
+        )
+    except ValueError as e:
+        st.error(e)
 
