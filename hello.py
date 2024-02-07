@@ -64,7 +64,7 @@ def schedule_to_dataframe(schedule):
     data = []
     for interval, meetings in schedule.items():
         for week, meeting in meetings:
-            data.append({"Interval": interval, "Week of": week, "Meeting": meeting})
+            data.append({"Week of": week, "Meeting": meeting})
     return pd.DataFrame(data)
 
 # Function to convert schedule to CSV and allow download
