@@ -72,9 +72,9 @@ def schedule_to_dataframe(schedule, people):
                 row[person] = ""  # or 0 if you prefer numeric indicators
             # Check if the meeting involves specific people and mark accordingly
             if "meet" in meeting:
-                participants = meeting.split(" & ")
+                participants = meeting.replace(" meet", "").split(" & ")
                 for participant in participants:
-                    if participant in row:
+                    if participant in people:  # Ensure participant is in the people list
                         row[participant] = "X"  # or 1 for numeric indicators
             data.append(row)
     
@@ -84,9 +84,13 @@ def schedule_to_dataframe(schedule, people):
     totals = {"Week of": "Total", "Meeting": ""}
     for person in people:
         totals[person] = df[person].apply(lambda x: 1 if x == "X" else 0).sum()
-    df = df.append(totals, ignore_index=True)
+    
+    # Use pd.concat to append the totals row
+    totals_df = pd.DataFrame([totals])  # Convert totals to a DataFrame
+    df = pd.concat([df, totals_df], ignore_index=True)
     
     return df
+
 
 
 
