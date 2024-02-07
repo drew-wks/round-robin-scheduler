@@ -38,7 +38,7 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
                     pair = random.choice(possible_pairs)
                     used_pairs.add(pair)
                 
-                interval_schedule.append((f"Week {week}", f"{pair[0]} & {pair[1]} Meet"))
+                interval_schedule.append((f"Week {week}", f"{pair[0]} & {pair[1]} meet"))
                 week_meetings_scheduled += 1
                 
                 # Check if we've scheduled enough meetings for this interval
@@ -84,7 +84,7 @@ with st.form("input_form"):
     num_intervals = 2
     allow_meetings_during_group = st.toggle("Allow 1:1 meetings during week of a group session", value=False)
     repetition = st.toggle("Allow multiple 1:1 meetings between the same individuals between group sessions", value=False)
-    submitted = st.form_submit_button("Generate a 1:1 Meeeting schedule", type="primary")
+    submitted = st.form_submit_button("Generate a 1:1 meeting schedule", type="primary")
     
 
 if submitted:
