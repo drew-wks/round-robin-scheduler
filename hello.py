@@ -65,7 +65,7 @@ def convert_df_to_csv(df):
 
 
 # Streamlit app
-col1, col2, col3 = st.columns([2,2,1])
+col1, col2, col3 = st.columns([3,3,2])
 with col1:
     st.write(' X ')
 with col2:
