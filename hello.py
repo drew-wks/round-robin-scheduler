@@ -45,7 +45,7 @@ with st.form("input_form"):
     num_intervals = st.number_input("Number of intervals to schedule", value=2, min_value=1)
     allow_meetings_during_group = st.toggle("Allow 1:1 meetings during weeks the group meets", value=False)
     repetition = st.toggle("Allow repeated pairings during an interval", value=False)
-    submitted = st.form_submit_button("Generate a 1:1 Meeeting schedule")
+    submitted = st.form_submit_button("Generate a 1:1 Meeeting schedule", type="primary")
     
 
 if submitted:
