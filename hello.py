@@ -74,7 +74,7 @@ with col3:
     st.write(' ')
 
 st.markdown("### Po7 1:1 Round Robin Meeting Scheduler")
-st.markdown("Creates a custom 1:1 meeting schedule in between group meetings. App uses a round robin format, enabling each person to meet with each other in the most efficient manner.  The goal is ensure everyone meets with everyone else and distribute meetings evenly in a way that takes into account people's preferences for meeting frequency.")
+st.markdown("Creates a custom 1:1 meeting schedule in between group meetings. The goal is ensure everyone meets with everyone else while distributing meetings evenly in a way that takes into account people's preferences for meeting frequency. App uses a round robin format, enabling each person to meet with each other in the most efficient manner.")
 
 # Input fields
 with st.form("input_form"):
