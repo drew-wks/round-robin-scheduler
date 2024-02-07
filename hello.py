@@ -7,7 +7,7 @@ import random
 # Function to generate 1:1 meetings
 def generate_meetings(people, group_meeting_interval, meetings_per_person, allow_meetings_during_group, repetition, num_intervals):
     if meetings_per_person > group_meeting_interval:
-        raise ValueError("Meetings per person must be less than or equal to the group meeting interval.")
+        raise ValueError("Meetings per person must be less than or equal to the group session interval.")
     if meetings_per_person < 1:
         raise ValueError("Meetings per person must be at least 1.")
     
@@ -17,7 +17,7 @@ def generate_meetings(people, group_meeting_interval, meetings_per_person, allow
     for interval in range(1, num_intervals + 1):
         interval_schedule = []
         if not allow_meetings_during_group:
-            interval_schedule.append(("Week 1", "Group Meeting"))
+            interval_schedule.append(("Week 1", "Group Session"))
         
         used_pairs = set()
         available_weeks = list(range(2, group_meeting_interval + 1)) if not allow_meetings_during_group else list(range(1, group_meeting_interval + 1))
@@ -74,16 +74,16 @@ with col3:
     st.write(' ')
 
 st.markdown("### Po7 1:1 Round Robin Meeting Scheduler")
-st.markdown("Creates a custom 1:1 meeting schedule in between group meetings. The goal is ensure everyone meets with everyone else while distributing meetings evenly in a way that takes into account people's preferences for meeting frequency. App uses a round robin format, enabling each person to meet with each other in the most efficient manner.")
+st.markdown("Creates a custom 1:1 meeting schedule in between group sessions. The goal is ensure everyone meets with everyone else while distributing meetings evenly in a way that takes into account people's preferences for meeting frequency. App uses a round robin format, enabling each person to meet with each other in the most efficient manner.")
 
 # Input fields
 with st.form("input_form"):
     people_input = st.text_input("List members' names or initials separated by commas (up to 9 people)", "DW, TL, GN, AC, MH, SW")
-    group_meeting_interval = st.slider("Group meeting interval (example: group meets every 8 weeks)", min_value=1, max_value=12, value=8, step=1)
-    meetings_per_person = st.slider("Number of 1:1 meetings to schedule for each person between group meetings", value=3, min_value=1, max_value=group_meeting_interval-1)
+    group_meeting_interval = st.slider("Frequency of Group sessions (example: group meets every 8 weeks)", min_value=1, max_value=12, value=8, step=1)
+    meetings_per_person = st.slider("Number of 1:1 meetings to schedule for each person between group sessions", value=3, min_value=1, max_value=group_meeting_interval-1)
     num_intervals = 2
-    allow_meetings_during_group = st.toggle("Allow 1:1 meetings during week of a group meeting?", value=False)
-    repetition = st.toggle("Allow repeated pairings during an interval?", value=False)
+    allow_meetings_during_group = st.toggle("Allow 1:1 meetings during week of a group session", value=False)
+    repetition = st.toggle("Allow multiple 1:1 meetings between the same individuals between group sessions", value=False)
     submitted = st.form_submit_button("Generate a 1:1 Meeeting schedule", type="primary")
     
 
