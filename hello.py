@@ -164,7 +164,7 @@ if submitted:
         st.error("Please enter up to 9 people.")
     else:
         try:
-            schedule = create_schedule(people, group_session_frequency, max_meeting_pp_pw, allow_meetings_on_group_weeks, repetition, num_intervals, group_meeting_date)
+            schedule = create_schedule(people, group_session_frequency, max_meetings_pp_pw, allow_meetings_on_group_weeks, repetition, num_intervals, group_meeting_date)
             
             # Convert the generated schedule to a DataFrame with additional columns for each person
             df_schedule = schedule_to_df(schedule, people)
