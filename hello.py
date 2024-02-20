@@ -11,87 +11,123 @@ def start_of_week(date):
 
     return date - timedelta(days=date.weekday() + 1)  
 
+def calculate_available_weeks(group_session_frequency, allow_meetings_on_group_weeks):
+    """
+    Calculate the available weeks for scheduling meetings
 
-# Function to generate 1:1 meetings
-def generate_meetings(people, group_session_frequency, max_meetings_pp_pw, allow_meetings_on_group_weeks, repetition, num_intervals, start_date):
+    Parameters:
+    - group_session_frequency (int): The frequency of group sessions.
+    - allow_meetings_on_group_weeks (bool): Flag indicating if meetings can be scheduled on group session weeks.
+
+    Returns:
+    - list: A list of integers representing the available weeks for scheduling meetings.
+    """
+    if allow_meetings_on_group_weeks:
+        return list(range(1, group_session_frequency + 1))
+    else:
+        return list(range(2, group_session_frequency + 1))
+
+
+def start_of_week(date):
+    '''Calculate the start date of the week for a given date, assuming the week starts on Sunday.'''
+    return date - timedelta(days=date.weekday() + 1)
+
+
+
+def create_schedule(people, group_session_frequency, max_meetings_pp_pw, allow_meetings_on_group_weeks, repetition):
+    """
+    Creates a schedule for 1:1 meetings between participants over a specified interval.
+
+    This function generates a schedule that ensures each participant meets with every other participant,
+    adhering to the specified maximum number of meetings per person per week. It accounts for whether
+    meetings can be scheduled during the week of a group session.
+
+    Parameters:
+    - people (list): A list of strings representing the names of the participants.
+    - group_session_frequency (int): The frequency of group sessions, indicating the number of weeks
+      between each group session.
+    - max_meetings_pp_pw (int): The maximum number of 1:1 meetings each person can have per week.
+    - allow_meetings_on_group_weeks (bool): Flag indicating if 1:1 meetings can be scheduled during
+      the week of a group session.
+    - repetition (bool): Flag indicating if participants can have multiple meetings with the same person
+      before having met everyone else.
+
+    Returns:
+    - dict: A dictionary where each key is an integer representing a week number within the interval,
+      and each value is a list of strings describing the meetings scheduled for that week.
+
+    Example (meetings not allowed during group week (week 1)):
+
+    {
+        2: ['A & B meet', 'C & D meet'],
+        3: ['A & C meet', 'B & D meet'],
+        4: ['A & D meet', 'B & C meet']
+    }
+
+    Example (meetings allowed during group week):
+
+    {
+        1: ['A & B meet'],
+        2: ['C & D meet'],
+        3: ['A & C meet'],
+        4: ['B & D meet']
+    }
+    """
     if max_meetings_pp_pw > group_session_frequency:
         st.error("Meetings per person must be less than or equal to the group session interval.")
     if max_meetings_pp_pw < 1:
         st.error("Meetings per person must be at least 1.")
     
     all_pairings = list(combinations(people, 2))
-    schedule = {}
-    current_start_date = start_of_week(start_date)  # Find the start of the week for the given start date
     
-    for interval in range(1, num_intervals + 1):
-        interval_schedule = []
-        if not allow_meetings_on_group_weeks:
-            week_of = current_start_date.strftime("%b %d, %Y")
-            interval_schedule.append((week_of, "--GROUP SESSION--"))
-        
-        used_pairs = set()
-        available_weeks = list(range(2, group_session_frequency + 1)) if not allow_meetings_on_group_weeks else list(range(1, group_session_frequency + 1))
-        
-        # Determine the number of meetings to schedule each week to spread them evenly
-        total_meetings = max_meetings_pp_pw * len(people) // 2
-        meetings_per_week = max(1, total_meetings // len(available_weeks))
-        
-        for week in available_weeks:
-            week_meetings_scheduled = 0
-            week_of = (current_start_date + timedelta(weeks=week-1)).strftime("%b %d, %Y")
-            while week_meetings_scheduled < meetings_per_week and len(used_pairs) < len(all_pairings):
-                if repetition:
-                    pair = random.choice(all_pairings)
-                else:
-                    possible_pairs = [pair for pair in all_pairings if pair not in used_pairs]
-                    if not possible_pairs:
-                        break
-                    pair = random.choice(possible_pairs)
-                    used_pairs.add(pair)
-                
-                interval_schedule.append((week_of, f"{pair[0]} & {pair[1]} meet"))
-                week_meetings_scheduled += 1
-                
-                if len(used_pairs) >= total_meetings:
+    if allow_meetings_on_group_weeks:
+        available_weeks = list(range(1, group_session_frequency + 1))
+    else:
+        available_weeks = list(range(2, group_session_frequency + 1))
+    
+    schedule = {week: [] for week in available_weeks}
+    
+    used_pairs = set()
+    total_meetings = max_meetings_pp_pw * len(people) // 2
+    meetings_per_week = max(1, total_meetings // len(available_weeks))
+    
+    for week in available_weeks:
+        week_meetings_scheduled = 0
+        while week_meetings_scheduled < meetings_per_week and len(used_pairs) < len(all_pairings):
+            if repetition:
+                pair = random.choice(all_pairings)
+            else:
+                possible_pairs = [pair for pair in all_pairings if pair not in used_pairs]
+                if not possible_pairs:
                     break
-        
-        schedule[f"Interval {interval}"] = interval_schedule
-        current_start_date += timedelta(weeks=group_session_frequency)  # Move to the next interval start date
-    
+                pair = random.choice(possible_pairs)
+                used_pairs.add(pair)
+            
+            schedule[week].append(f"{pair[0]} & {pair[1]} meet")
+            week_meetings_scheduled += 1
+            
+            if len(used_pairs) >= total_meetings:
+                break.
     return schedule
+    
 
 
-def schedule_to_dataframe(schedule, people):
-    # Initialize the DataFrame with additional columns for each person
-    columns = ["Week of", "Meeting"] + people
+def schedule_to_df(schedule, allow_meetings_on_group_weeks):
     data = []
     
-    for interval, meetings in schedule.items():
-        for week, meeting in meetings:
-            row = {"Week of": week, "Meeting": meeting}
-            # Initialize person columns with empty strings or zeros
-            for person in people:
-                row[person] = ""  # or 0 if you prefer numeric indicators
-            # Check if the meeting involves specific people and mark accordingly
-            if "meet" in meeting:
-                participants = meeting.replace(" meet", "").split(" & ")
-                for participant in participants:
-                    if participant in people:  # Ensure participant is in the people list
-                        row[participant] = "X"  # or 1 for numeric indicators
-            data.append(row)
-    
-    df = pd.DataFrame(data, columns=columns)
-    
-    # Optionally, add a totals row at the bottom
-    totals = {"Week of": "Total", "Meeting": ""}
-    for person in people:
-        totals[person] = df[person].apply(lambda x: 1 if x == "X" else 0).sum()
-    
-    # Use pd.concat to append the totals row
-    totals_df = pd.DataFrame([totals])  # Convert totals to a DataFrame
-    df = pd.concat([df, totals_df], ignore_index=True)
-    
+    for week, meetings in schedule.items():
+        for meeting in meetings:
+            data.append({'Week': week, 'Meeting': meeting})
+            
+    df = pd.DataFrame(data)
+    df.sort_values(by='Week', inplace=True)
+    group_session_row = pd.DataFrame({'Week': 1, 'Meeting': "--GROUP SESSION--"}, index=[0])
+    df.index = df.index + 1  # Shift the index to make space for the new row at the beginning
+    df = pd.concat([group_session_row, df], ignore_index=True)
     return df
+
+
+df_schedule = schedule_to_df(schedule, allow_meetings_on_group_weeks=True)
 
 
 
