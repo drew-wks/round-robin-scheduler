@@ -107,7 +107,7 @@ def create_schedule(people, group_session_frequency, max_meetings_pp_pw, allow_m
             week_meetings_scheduled += 1
             
             if len(used_pairs) >= total_meetings:
-                break.
+                break
     return schedule
     
 
