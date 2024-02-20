@@ -4,7 +4,19 @@ from itertools import combinations
 import random
 from datetime import datetime, timedelta
 
+"""Objective
+Each person meets with each other person as many times as possible given the constraints
 
+Constraints
+Number of participants: this can be 2-10 people
+Meeting frequency which is the maximum mumber of meetings any given participant are willing to take per week: integer 0.5-3
+Whether to have more than one meeeting with the same person during the scheduling interval
+Scheduling interval: This is the output of some meta assumptions
+    How many weeks between Group Sessions
+    Whether a meetings are held during the weeks a group session is scheduled
+
+
+"""
 
 def start_of_week(date):
     '''Calculate the start date of the week for a given date, assuming the week starts on Sunday.'''
